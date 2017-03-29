@@ -10,6 +10,11 @@ class Slider extends React.Component {
     defaultValue: PropTypes.number,
     value: PropTypes.number,
     disabled: PropTypes.bool,
+    ariaLabel: PropTypes.string,
+    ariaValueNow: PropTypes.number,
+    ariaValueText: PropTypes.string,
+    ariaValueMin: PropTypes.number,
+    ariaValueMax: PropTypes.number,
   };
 
   static defaultProps = {};
@@ -85,6 +90,13 @@ class Slider extends React.Component {
     this.onChange({ value });
   }
 
+  onMoveByValueOffset = (position, valueOffset) => {
+    if (valueOffset) return;
+    const value = this.calcValueByPos(position) + valueOffset;
+
+    this.onChange({ value });
+  }
+
   getValue() {
     return this.state.value;
   }
@@ -110,6 +122,13 @@ class Slider extends React.Component {
       included,
       disabled,
       minimumTrackTintColor,
+      min,
+      max,
+      ariaLabel,
+      ariaValueNow,
+      ariaValueText,
+      ariaValueMin,
+      ariaValueMax,
       handle: handleGenerator,
     } = this.props;
     const { value, dragging } = this.state;
@@ -121,6 +140,11 @@ class Slider extends React.Component {
       value,
       dragging,
       disabled,
+      ariaLabel,
+      ariaValueNow: ariaValueNow || value,
+      ariaValueText,
+      ariaValueMin: ariaValueMin || min,
+      ariaValueMax: ariaValueMax || max,
       minimumTrackTintColor,
       ref: h => this.saveHandle(0, h),
     });

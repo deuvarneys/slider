@@ -17,6 +17,11 @@ class Range extends React.Component {
     ]),
     allowCross: PropTypes.bool,
     disabled: PropTypes.bool,
+    ariaLabel: PropTypes.arrayOf(PropTypes.string),
+    ariaValueNow: PropTypes.arrayOf(PropTypes.string),
+    ariaValueText: PropTypes.arrayOf(PropTypes.string),
+    ariaValueMin: PropTypes.arrayOf(PropTypes.number),
+    ariaValueMax: PropTypes.arrayOf(PropTypes.number),
   };
 
   static defaultProps = {
@@ -102,6 +107,35 @@ class Range extends React.Component {
     this.setState({ handle: null });
     this.removeDocumentEvents();
     this.props.onAfterChange(this.getValue());
+  }
+
+  onMoveByValueOffset = (position, valueOffset) => {
+    if (valueOffset === 0) return;
+    const props = this.props;
+    const state = this.state;
+
+    const closestBound = this.getClosestBound(this.calcValueByPos(position));
+    const boundNeedMoving = this.getBoundNeedMoving(props.value, closestBound);
+
+    const oldValue = state.bounds[boundNeedMoving];
+    const value = oldValue + valueOffset;
+
+    const nextBounds = [...state.bounds];
+    nextBounds[boundNeedMoving] = value;
+
+    let nextHandle = boundNeedMoving;
+    if (props.pushable !== false) {
+      const originalValue = state.bounds[nextHandle];
+      this.pushSurroundingHandles(nextBounds, nextHandle, originalValue);
+    } else if (props.allowCross) {
+      nextBounds.sort((a, b) => a - b);
+      nextHandle = nextBounds.indexOf(value);
+    }
+
+    this.onChange({
+      handle: nextHandle,
+      bounds: nextBounds,
+    });
   }
 
   onMove(e, position) {
@@ -281,6 +315,13 @@ class Range extends React.Component {
       vertical,
       included,
       disabled,
+      min,
+      max,
+      ariaLabel = [],
+      ariaValueNow = [],
+      ariaValueText = [],
+      ariaValueMin = [],
+      ariaValueMax = [],
       handle: handleGenerator,
     } = this.props;
 
@@ -298,6 +339,11 @@ class Range extends React.Component {
       dragging: handle === i,
       index: i,
       disabled,
+      ariaLabel: ariaLabel[i] || '',
+      ariaValueNow: ariaValueNow[i] || bounds[i],
+      ariaValueText: ariaValueText[i] || '',
+      ariaValueMin: ariaValueMin[i] || min,
+      ariaValueMax: ariaValueMax[i] || max,
       ref: h => this.saveHandle(i, h),
     }));
 

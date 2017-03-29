@@ -150,6 +150,24 @@ export default function createSlider(Component) {
       this.onMove(e, position - this.dragOffset);
     }
 
+    onKeyDown = (e) => {
+      const { step } = this.props;
+      const handlePosition = utils.getHandleCenterPosition(this.props.vertical, e.target);
+      if (e.keyCode === 13 || e.keyCode === 9 || !this.sliderRef) {
+        this.onEnd();
+      } else if (e.keyCode === 38 || e.keyCode === 39) {
+        this.onMoveByValueOffset(handlePosition, step);
+      } else if (e.keyCode === 40 || e.keyCode === 37) {
+        this.onMoveByValueOffset(handlePosition, -step);
+      }
+
+      // if there is no keyup listener, add one
+      if (!this.onKeyUpListener) {
+        this.addDocumentKeyboardEvents();
+      }
+      utils.pauseEvent(e);
+    }
+
     getSliderStart() {
       const slider = this.sliderRef;
       const rect = slider.getBoundingClientRect();
