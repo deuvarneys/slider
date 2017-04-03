@@ -18,7 +18,7 @@ class Range extends React.Component {
     allowCross: PropTypes.bool,
     disabled: PropTypes.bool,
     ariaLabel: PropTypes.arrayOf(PropTypes.string),
-    ariaValueNow: PropTypes.arrayOf(PropTypes.string),
+    ariaValueNow: PropTypes.arrayOf(PropTypes.number),
     ariaValueText: PropTypes.arrayOf(PropTypes.string),
     ariaValueMin: PropTypes.arrayOf(PropTypes.number),
     ariaValueMax: PropTypes.arrayOf(PropTypes.number),
