@@ -109,8 +109,8 @@ class Range extends React.Component {
     this.props.onAfterChange(this.getValue());
   }
 
-  onMoveByValueOffset = (position, valueOffset) => {
-    if (valueOffset === 0) return;
+  onMoveByKeyboard(position, step) {
+    if (step === 0) return;
     const props = this.props;
     const state = this.state;
 
@@ -118,7 +118,7 @@ class Range extends React.Component {
     const boundNeedMoving = this.getBoundNeedMoving(props.value, closestBound);
 
     const oldValue = state.bounds[boundNeedMoving];
-    const value = oldValue + valueOffset;
+    const value = oldValue + step;
 
     const nextBounds = [...state.bounds];
     nextBounds[boundNeedMoving] = value;
@@ -221,6 +221,52 @@ class Range extends React.Component {
       this._getPointsCache = { marks, step, points };
     }
     return this._getPointsCache.points;
+  }
+
+  moveToMax(position) {
+    const { max, pushable, allowCross, value } = this.props;
+    const state = this.state;
+    const closestBound = this.getClosestBound(this.calcValueByPos(position));
+    const boundNeedMoving = this.getBoundNeedMoving(value, closestBound);
+    const nextBounds = [...state.bounds];
+
+    let nextHandle = boundNeedMoving;
+    nextBounds[boundNeedMoving] = max;
+    if (pushable !== false) {
+      const originalValue = state.bounds[nextHandle];
+      this.pushSurroundingHandles(nextBounds, nextHandle, originalValue);
+    } else if (allowCross) {
+      nextBounds.sort((a, b) => a - b);
+      nextHandle = nextBounds.indexOf(max);
+    }
+
+    this.onChange({
+      handle: nextHandle,
+      bounds: nextBounds,
+    });
+  }
+
+  moveToMin(position) {
+    const { min, pushable, allowCross, value } = this.props;
+    const state = this.state;
+    const closestBound = this.getClosestBound(this.calcValueByPos(position));
+    const boundNeedMoving = this.getBoundNeedMoving(value, closestBound);
+    const nextBounds = [...state.bounds];
+
+    let nextHandle = boundNeedMoving;
+    nextBounds[boundNeedMoving] = min;
+    if (pushable !== false) {
+      const originalValue = state.bounds[nextHandle];
+      this.pushSurroundingHandles(nextBounds, nextHandle, originalValue);
+    } else if (allowCross) {
+      nextBounds.sort((a, b) => a - b);
+      nextHandle = nextBounds.indexOf(min);
+    }
+
+    this.onChange({
+      handle: nextHandle,
+      bounds: nextBounds,
+    });
   }
 
   pushSurroundingHandles(bounds, handle, originalValue) {

@@ -73,6 +73,7 @@ export default function createSlider(Component) {
 
     componentWillUnmount() {
       if (super.componentWillUnmount) super.componentWillUnmount();
+      if (this.onKeyUpListener) this.onKeyUpListener.remove();
       this.removeDocumentEvents();
     }
 
@@ -84,6 +85,7 @@ export default function createSlider(Component) {
       if (!utils.isEventFromHandle(e, this.handlesRefs)) {
         this.dragOffset = 0;
       } else {
+        e.target.focus();
         const handlePosition = utils.getHandleCenterPosition(isVertical, e.target);
         this.dragOffset = position - handlePosition;
         position = handlePosition;
@@ -121,6 +123,10 @@ export default function createSlider(Component) {
       this.onMouseUpListener = addEventListener(document, 'mouseup', this.onEnd);
     }
 
+    addDocumentKeyboardEvents() {
+      this.onKeyUpListener = addEventListener(document, 'keyup', this.onEnd);
+    }
+
     removeDocumentEvents() {
       /* eslint-disable no-unused-expressions */
       this.onTouchMoveListener && this.onTouchMoveListener.remove();
@@ -155,10 +161,15 @@ export default function createSlider(Component) {
       const handlePosition = utils.getHandleCenterPosition(this.props.vertical, e.target);
       if (e.keyCode === 13 || e.keyCode === 9 || !this.sliderRef) {
         this.onEnd();
+        return;
       } else if (e.keyCode === 38 || e.keyCode === 39) {
-        this.onMoveByValueOffset(handlePosition, step);
+        this.onMoveByKeyboard(handlePosition, step);
       } else if (e.keyCode === 40 || e.keyCode === 37) {
-        this.onMoveByValueOffset(handlePosition, -step);
+        this.onMoveByKeyboard(handlePosition, -step);
+      } else if (e.keyCode === 35) {
+        this.moveToMax(handlePosition);
+      } else if (e.keyCode === 36) {
+        this.moveToMin(handlePosition);
       }
 
       // if there is no keyup listener, add one
@@ -248,6 +259,7 @@ export default function createSlider(Component) {
           className={sliderClassName}
           onTouchStart={disabled ? noop : this.onTouchStart}
           onMouseDown={disabled ? noop : this.onMouseDown}
+          onKeyDown={disabled ? noop : this.onKeyDown}
           style={style}
         >
           <div className={`${prefixCls}-rail`} style={trackStyle} />

@@ -90,9 +90,9 @@ class Slider extends React.Component {
     this.onChange({ value });
   }
 
-  onMoveByValueOffset = (position, valueOffset) => {
-    if (valueOffset) return;
-    const value = this.calcValueByPos(position) + valueOffset;
+  onMoveByKeyboard(position, step) {
+    if (step) return;
+    const value = this.calcValueByPos(position) + step;
 
     this.onChange({ value });
   }
@@ -107,6 +107,16 @@ class Slider extends React.Component {
 
   getUpperBound() {
     return this.state.value;
+  }
+
+  moveToMax() {
+    const { max } = this.props;
+    this.onChange({ value: max });
+  }
+
+  moveToMin() {
+    const { min } = this.props;
+    this.onChange({ value: min });
   }
 
   trimAlignValue(v, nextProps = {}) {
