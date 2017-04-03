@@ -91,7 +91,6 @@ class Slider extends React.Component {
   }
 
   onMoveByKeyboard(position, step) {
-    if (step) return;
     const value = this.calcValueByPos(position) + step;
 
     this.onChange({ value });

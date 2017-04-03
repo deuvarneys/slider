@@ -20,8 +20,8 @@ class Range extends React.Component {
     ariaLabel: PropTypes.arrayOf(PropTypes.string),
     ariaValueNow: PropTypes.arrayOf(PropTypes.number),
     ariaValueText: PropTypes.arrayOf(PropTypes.string),
-    ariaValueMin: PropTypes.arrayOf(PropTypes.number),
-    ariaValueMax: PropTypes.arrayOf(PropTypes.number),
+    ariaValueMin: PropTypes.number,
+    ariaValueMax: PropTypes.number,
   };
 
   static defaultProps = {
