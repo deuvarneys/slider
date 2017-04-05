@@ -11,7 +11,7 @@ class Slider extends React.Component {
     value: PropTypes.number,
     disabled: PropTypes.bool,
     ariaLabel: PropTypes.string,
-    ariaValueNow: PropTypes.number,
+    ariaValueNow: PropTypes.arrayOf(PropTypes.number),
     ariaValueText: PropTypes.string,
     ariaValueMin: PropTypes.number,
     ariaValueMax: PropTypes.number,
