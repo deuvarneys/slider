@@ -361,8 +361,6 @@ class Range extends React.Component {
       vertical,
       included,
       disabled,
-      min,
-      max,
       ariaLabel = [],
       ariaValueNow = [],
       ariaValueText = [],
@@ -388,8 +386,8 @@ class Range extends React.Component {
       ariaLabel: ariaLabel[i] || '',
       ariaValueNow: ariaValueNow[i] || bounds[i],
       ariaValueText: ariaValueText[i] || '',
-      ariaValueMin: ariaValueMin[i] || min,
-      ariaValueMax: ariaValueMax[i] || max,
+      ariaValueMin,
+      ariaValueMax,
       ref: h => this.saveHandle(i, h),
     }));
 

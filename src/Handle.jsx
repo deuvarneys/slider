@@ -45,7 +45,7 @@ Handle.propTypes = {
   disabled: PropTypes.bool,
   ariaLabel: PropTypes.string,
   ariaValueText: PropTypes.string,
-  ariaValueNow: PropTypes.arrayOf(PropTypes.number),
+  ariaValueNow: PropTypes.number,
   ariaValueMin: PropTypes.number,
   ariaValueMax: PropTypes.number,
 };
